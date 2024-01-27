@@ -15,13 +15,12 @@ def create_patch_files(patch_folder, ratio_value, scaling_factor, visual_fixes):
 
     visual_fixesa = visual_fixes[0]
     visual_fixesb = visual_fixes[1]
-    visual_fixesc = visual_fixes[2]
     scaling_factor = float(scaling_factor)
     ratio_value = float(ratio_value)
     print(f"The scaling factor is {scaling_factor}.")
     hex_value = make_hex(ratio_value, 0)
     hex_value2 = make_hex(ratio_value, 3)
-    version_variables = ["1.0.0", "1.2.0", "1.3.0"]
+    version_variables = ["1.0.0", "3.0.2"]
     for version_variable in version_variables:
         file_name = f"main-{version_variable}.pchtxt"
         file_path = os.path.join(patch_folder, file_name)
@@ -32,13 +31,7 @@ def create_patch_files(patch_folder, ratio_value, scaling_factor, visual_fixes):
             replacement2_value = "00A63D5C"
             visual_fix = visual_fixesa
             
-        if version_variable == "1.2.0":
-            nsobidid = "F5DCCDDB37E97724EBDBCCCDBEB965FF"
-            replacement_value = "00A12A50"
-            replacement2_value = "00AA7494"
-            visual_fix = visual_fixesc
-
-        elif version_variable == "1.3.0":
+        elif version_variable == "3.0.2":
             nsobidid = "B424BE150A8E7D78701CBE7A439D9EBF"
             replacement_value = "0074D2EC"
             replacement2_value = "006329F8"
@@ -56,7 +49,7 @@ def create_patch_files(patch_folder, ratio_value, scaling_factor, visual_fixes):
 
 {visual_fix}
 
-// Generated using SMO-AAR by Fayaz (github.com/fayaz12g/smo-aar)'''
+// Generated using MM2-AAR by Fayaz (github.com/fayaz12g/mm2-aar)'''
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, 'w') as patch_file:
             patch_file.write(patch_content)

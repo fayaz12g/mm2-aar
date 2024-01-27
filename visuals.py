@@ -35,7 +35,7 @@ def create_visuals(do_screenshot, do_disable_fxaa, do_disable_dynamicres):
 @stop
 '''
 
-    visuals1_3_0= f'''// Screenshot Mode Graphics
+    visuals3_0_1= f'''// Screenshot Mode Graphics
 @{screenshot}
 005EE238 68008052
 005EDB3C 1F2003D5
@@ -53,27 +53,7 @@ def create_visuals(do_screenshot, do_disable_fxaa, do_disable_dynamicres):
 @stop
 '''
 
-    visuals1_2_0 = f'''// Screenshot Mode Graphics
-@disabled
-00A56568 68008052
-00A55CD0 1F2003D5
-00A55CD4 1F2003D5
-@stop
-
-// Disable FXAA
-@disabled
-00B92318 08000014
-@stop
-
-// Disable Dynamic Resolution
-@disabled
-00A583B4 1F2003D5
-00A583C8 1F2003D5
-@stop
-'''
-
     visual_fixes.append(visuals1_0_0)
-    visual_fixes.append(visuals1_3_0)
-    visual_fixes.append(visuals1_2_0)
-    
+    visual_fixes.append(visuals3_0_1)
+
     return visual_fixes
