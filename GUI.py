@@ -35,15 +35,15 @@ from controller import controller_files
 #### Create Window ####
 #######################
 
-tool_version = "1.4.2"
+tool_version = "1.0.0"
 
 root = customtkinter.CTk()
-root.title(f"Fayaz's Settings {tool_version} for Super Mario Odyssey")
+root.title(f"Fayaz's Settings {tool_version} for Super Mario Maker 2")
 root.geometry("500x720")
 
 customtkinter.set_appearance_mode("system")
 customtkinter.set_default_color_theme("blue")  
-windowtitle = customtkinter.CTkLabel(master=root, font=(CTkFont, 20), text="Fayaz's SMO Utility {tool_version}")
+windowtitle = customtkinter.CTkLabel(master=root, font=(CTkFont, 20), text="Fayaz's Super Mario Maker 2 Utility {tool_version}")
 
 ###############################################
 ###########    GLOBAL SETTINGS      ###########
@@ -275,10 +275,10 @@ def select_mario_folder():
     scaling_factor = (16/9) / (int(numerator_entry.get()) / int(denominator_entry.get()))
     username = getpass.getuser()
     if output_yuzu.get() is True:
-        input_folder = f"C:/Users/{username}/AppData/Roaming/yuzu/load/0100000000010000"
+        input_folder = f"C:/Users/{username}/AppData/Roaming/yuzu/load/01009B90006DC000"
         process_name = "yuzu.exe"
     if output_ryujinx.get() is True:
-        input_folder = f"C:/Users/{username}/AppData/Roaming/Ryujinx/mods/contents/0100000000010000"
+        input_folder = f"C:/Users/{username}/AppData/Roaming/Ryujinx/mods/contents/01009B90006DC000"
         process_name = "ryujinx.exe"
     else:
         process_name = "yuzu.exe"
@@ -305,7 +305,7 @@ def select_mario_folder():
     if os.path.exists(text_folder):
         shutil.rmtree(text_folder)
 
-    # Download the SMO Layout Files
+    # Download the mm2 Layout Files
     download_extract_copy(input_folder, mod_name)
 
     # Create the PCHTXT Files
@@ -315,34 +315,44 @@ def select_mario_folder():
     theromfs_folder = os.path.join(input_folder, mod_name, "romfs")
 
     # Download and put Controlelr Files in Place
-    controller_files(controller_type.get(), theromfs_folder)
+    # controller_files(controller_type.get(), theromfs_folder)
 
     # Decomperss SZS and Lyarc Files
     for file in os.listdir(romfs_folder):
         if file.lower().endswith(".szs"):
             file_path = os.path.join(romfs_folder, file)
             extract_blarc(file_path, romfs_folder)
+    for folder_path, _, files in os.walk(romfs_folder):
+        for file in files:
+            if file.lower().endswith(".arc"):
+                file_path = os.path.join(folder_path, file)
+                extract_blarc(file_path, folder_path)
 
     # Perform Pane Strecthing
     patch_blarc(str(ratio_value), HUD_pos, text_folder)
 
-    # Compress layout folders and delete them
-    for root, dirs, files in os.walk(input_folder):
-        if "layout" in dirs:
-            level = -1
-            layout_folder_path = os.path.join(root, "layout")
-            layout_lyarc_path = os.path.join(root, "layout.lyarc")
-            pack_folder_to_blarc(layout_folder_path, layout_lyarc_path, level)
-            shutil.rmtree(layout_folder_path)
+    # Compress each subfolder into .arc files
+    for folder in os.listdir(romfs_folder):
+        top_level_folder_path = os.path.join(romfs_folder, folder)
+        if os.path.isdir(top_level_folder_path):
+            for subfolder in os.listdir(top_level_folder_path):
+                subfolder_path = os.path.join(top_level_folder_path, subfolder)
+                if os.path.isdir(subfolder_path):
+                    level = -1
+                    arc_file_name = subfolder + ".arc"
+                    arc_file_path = os.path.join(top_level_folder_path, arc_file_name)
+                    pack_folder_to_blarc(subfolder_path, arc_file_path, level)
+                    shutil.rmtree(subfolder_path)
     
-    # Compress all remaining folders to SZS and delete them
-    for dir_name in os.listdir(romfs_folder):
-        level = 1
-        dir_path = os.path.join(romfs_folder, dir_name)
-        if os.path.isdir(os.path.join(romfs_folder, dir_name)):
-            szs_output_path = os.path.join(romfs_folder, f"{dir_name}.szs")
-            pack_folder_to_blarc(os.path.join(romfs_folder, dir_name), szs_output_path, level)
-            shutil.rmtree(dir_path)
+    # Compress each top-level folder into a .szs file
+    for folder in os.listdir(romfs_folder):
+        folder_path = os.path.join(romfs_folder, folder)
+        if os.path.isdir(folder_path):
+            level = -1
+            szs_file_name = folder + ".szs"
+            szs_file_path = os.path.join(romfs_folder, szs_file_name)
+            pack_folder_to_blarc(folder_path, szs_file_path, level)
+            shutil.rmtree(folder_path)
 
     if open_when_done.get() == True:
         print ("Complete! Opening output folder.")
@@ -677,7 +687,7 @@ notebook.add("Credits")
 
 credits_label = ClickableLabel(master=notebook.tab("Credits"), text=
                     ('Utility created by fayaz\n'
-                     'https://github.com/fayaz12g/smo-aar\n'
+                     'https://github.com/fayaz12g/mm2-aar\n'
                      'ko-fi.com/fayaz12\n'
                      '\n\nWith special help from\n'
                      'Christopher Fields (cfields7)\n'
