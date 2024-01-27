@@ -35,7 +35,7 @@ from controller import controller_files
 #### Create Window ####
 #######################
 
-tool_version = "1.0.0"
+tool_version = "1.0.1"
 
 root = customtkinter.CTk()
 root.title(f"Fayaz's Settings {tool_version} for Super Mario Maker 2")
@@ -311,7 +311,7 @@ def select_mario_folder():
     # Create the PCHTXT Files
     visual_fixes = create_visuals(do_screenshot.get(), do_disable_fxaa.get(), do_disable_dynamicres.get())
     create_patch_files(patch_folder, str(ratio_value), str(scaling_factor), visual_fixes)
-    romfs_folder = os.path.join(input_folder, mod_name, "romfs", "LayoutData")
+    romfs_folder = os.path.join(input_folder, mod_name, "romfs", "Layout")
     theromfs_folder = os.path.join(input_folder, mod_name, "romfs")
 
     # Download and put Controlelr Files in Place
